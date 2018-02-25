@@ -39,6 +39,11 @@ class DbManager {
         return cursor
     }
 
+    fun delete(selection: String, selectionArgs: Array<String>) : Int {
+        val count = sqlDB!!.delete(dbTable, selection, selectionArgs)
+        return count
+    }
+
     inner class DataBaseHelperNotes: SQLiteOpenHelper {
 
         var context: Context

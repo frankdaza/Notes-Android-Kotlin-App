@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                loadQuery("%$p0%", "%$p0%")
+                loadQuery("%${p0!!.toUpperCase()}%", "%${p0!!.toUpperCase()}%")
                 return false
             }
         })
@@ -101,6 +101,13 @@ class MainActivity : AppCompatActivity() {
             var myNote = this.listNotesAdapter[p0]
             myView.tvTitle.text = myNote.noteName
             myView.tvDescripcion.text = myNote.noteDescripcion
+
+            myView.ivDelete.setOnClickListener {
+                var dbManager: DbManager = DbManager(applicationContext)
+                val selectionArgs = arrayOf(myNote.noteId.toString())
+                dbManager.delete("ID = ?", selectionArgs)
+                loadQuery("%", "%")
+            }
 
             return myView
         }
