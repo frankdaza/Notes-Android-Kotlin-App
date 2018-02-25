@@ -24,6 +24,7 @@ class AddNoteActivity : AppCompatActivity() {
 
         if (id > 0) {
             Toast.makeText(this, "The note has been added successfully!", Toast.LENGTH_LONG).show()
+            finish()
         } else {
             Toast.makeText(this, "The note has not been added successfully!", Toast.LENGTH_LONG).show()
         }

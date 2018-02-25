@@ -9,6 +9,7 @@ import android.view.*
 import android.widget.BaseAdapter
 import android.widget.SearchView
 import android.widget.Toast
+import com.frankdaza.notes.model.DbManager
 import com.frankdaza.notes.model.Note
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.adapter_note.view.*
@@ -21,13 +22,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Adding dummy data
-        this.listNotes.add(Note(1, "Frank's Happy Birthday", "It's my happy birthday wujuu!"))
-        this.listNotes.add(Note(2, "Vanessa's Happy Birthday", "It's my happy birthday wujuu!"))
-        this.listNotes.add(Note(3, "Andrea's Happy Birthday", "It's my happy birthday wujuu!"))
-        this.listNotes.add(Note(4, "Martha's Happy Birthday", "It's my happy birthday wujuu!"))
-        this.listNotes.add(Note(5, "Obed's Happy Birthday", "It's my happy birthday wujuu!"))
-        this.listNotes.add(Note(6, "Mauricio's Happy Birthday", "It's my happy birthday wujuu!"))
+        loadQuery("%", "%")
+    }
+
+    fun loadQuery(title: String, descripcion: String) {
+        var dbManager: DbManager = DbManager(this)
+        val selectionArgs = arrayOf(title, descripcion)
+        val projections = arrayOf("ID", "Title", "Description")
+        val cursor = dbManager.query(projections, "Title like ? OR Description like ?", selectionArgs, "Title")
+        this.listNotes.clear()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id: Int = cursor.getInt(cursor.getColumnIndex("ID"))
+                val title: String = cursor.getString(cursor.getColumnIndex("Title"))
+                val description: String = cursor.getString(cursor.getColumnIndex("Description"))
+
+                this.listNotes.add(Note(id, title, description))
+            } while (cursor.moveToNext())
+        }
 
         var noteAdapter = NoteAdapter(this.listNotes)
         lvNotes.adapter = noteAdapter
@@ -47,11 +60,11 @@ class MainActivity : AppCompatActivity() {
 
         sv.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
-                Toast.makeText(applicationContext, p0, Toast.LENGTH_LONG).show()
                 return false
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
+                loadQuery("%$p0%", "%$p0%")
                 return false
             }
         })
