@@ -25,6 +25,20 @@ class MainActivity : AppCompatActivity() {
         loadQuery("%", "%")
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadQuery("%", "%")
+    }
+
+    fun goToUpdate(note: Note) {
+        var intent = Intent(this, AddNoteActivity::class.java)
+        intent.putExtra("id", note.noteId)
+        intent.putExtra("title", note.noteName)
+        intent.putExtra("description", note.noteDescripcion)
+        startActivity(intent)
+    }
+
+
     fun loadQuery(title: String, descripcion: String) {
         var dbManager: DbManager = DbManager(this)
         val selectionArgs = arrayOf(title, descripcion)
@@ -107,6 +121,10 @@ class MainActivity : AppCompatActivity() {
                 val selectionArgs = arrayOf(myNote.noteId.toString())
                 dbManager.delete("ID = ?", selectionArgs)
                 loadQuery("%", "%")
+            }
+
+            myView.ivEdit.setOnClickListener{
+                goToUpdate(myNote)
             }
 
             return myView

@@ -44,6 +44,11 @@ class DbManager {
         return count
     }
 
+    fun update(values: ContentValues, selection: String, selectionArgs: Array<String>) : Int {
+        val count = sqlDB!!.update(dbTable, values, selection, selectionArgs)
+        return count
+    }
+
     inner class DataBaseHelperNotes: SQLiteOpenHelper {
 
         var context: Context
