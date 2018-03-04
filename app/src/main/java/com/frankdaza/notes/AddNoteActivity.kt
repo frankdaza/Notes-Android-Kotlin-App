@@ -16,13 +16,18 @@ class AddNoteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_note)
 
-        var bundle: Bundle = intent.extras
-        this.notId = bundle.getInt("id", 0)
+        try {
+            var bundle: Bundle = intent.extras
+            this.notId = bundle.getInt("id", 0)
 
-        if (this.notId != 0) {
-            etTitle.setText(bundle.getString("title").toString())
-            etDescription.setText(bundle.getString("description").toString())
+            if (this.notId != 0) {
+                etTitle.setText(bundle.getString("title").toString())
+                etDescription.setText(bundle.getString("description").toString())
+            }
+        } catch (e: Exception) {
+            
         }
+
     }
 
     fun actionAddNote(view: View) {
